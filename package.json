@@ -8,6 +8,7 @@
     "dev": "nodemon src/index.js --ignore 'store/*'"
   },
   "dependencies": {
+    "axios": "^0.21.0",
     "discord.js": "^12.4.1",
     "dotenv": "^8.2.0"
   },
