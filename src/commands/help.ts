@@ -8,7 +8,7 @@ export default createCommand({
 
   execute(message, args, { commands }) {
     const formatted = commands.map(
-      (command) => `${config.prefix}-${command.name}: ${command.description}`
+      (command) => `${config.prefix}${command.name}: ${command.description}`
     );
 
     const response = [
