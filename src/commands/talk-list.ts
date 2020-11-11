@@ -6,7 +6,7 @@ export default createCommand({
 
   description: 'List all talking points',
 
-  execute(message, args) {
+  execute(message) {
     message.reply(formatTalkingPoints(message.guild!.id));
   },
 });

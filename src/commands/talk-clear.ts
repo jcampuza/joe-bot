@@ -6,7 +6,7 @@ export default createCommand({
 
   description: 'Clear all talking point',
 
-  execute(message, args) {
+  execute(message) {
     clearTalkingPoints(message.guild!.id);
 
     message.reply('Talking points cleared');
