@@ -5,11 +5,18 @@ export default createCommand({
 
   description: 'List talking points related commands',
 
-  execute(message, args, commands) {
-    const talkCommands = commands.filter((value, key) => value.name.startsWith('talk'));
-    const formatted = talkCommands.map((command) => `${command.name}: ${command.description}`);
+  execute(message, args, { commands }) {
+    const talkCommands = commands.filter((value, key) =>
+      value.name.startsWith('talk')
+    );
 
-    const response = ['Talking points related commands:', ...formatted].join('\n');
+    const formatted = talkCommands.map(
+      (command) => `${command.name}: ${command.description}`
+    );
+
+    const response = ['Talking points related commands:', ...formatted].join(
+      '\n'
+    );
 
     message.reply(response);
   },

@@ -1,84 +1,98 @@
-import { fetchDb, writeDb } from '../helpers';
+import { createDbUtils } from '../data/db';
 
-export const getTalkingPoints = (guildId: string) => {
-  const db = fetchDb();
+/**
+ * talkService implements methods available for interfacing with talking points related data
+ */
+export const createTalkService = (dbService = createDbUtils()) => {
+  const getTalkingPoints = (guildId: string) => {
+    const data = dbService.get();
 
-  if (!db[guildId]) {
-    db[guildId] = {
-      talkingPoints: [],
-    };
-  }
-
-  return db[guildId].talkingPoints;
-};
-
-export const setTalkingPoint = (guildId: string, text = '') => {
-  const db = fetchDb();
-
-  if (!db[guildId]) {
-    db[guildId] = {
-      talkingPoints: [],
-    };
-  }
-
-  db[guildId].talkingPoints.push(text);
-
-  writeDb(db);
-};
-
-export const updateTalkingPoint = (guildId: string, idx: number, text = '') => {
-  const db = fetchDb();
-
-  if (!db[guildId]) {
-    return null;
-  }
-
-  db[guildId].talkingPoints = db[guildId].talkingPoints.map((item, i) => {
-    if (i === idx - 1) {
-      return text;
+    if (!data[guildId]) {
+      data[guildId] = {
+        talkingPoints: [],
+      };
     }
 
-    return item;
-  });
+    return data[guildId].talkingPoints;
+  };
 
-  writeDb(db);
-};
+  const setTalkingPoint = (guildId: string, text = '') => {
+    const data = dbService.get();
 
-export const deleteTalkingPoint = (guildId: string, idx: number) => {
-  const db = fetchDb();
+    if (!data[guildId]) {
+      data[guildId] = {
+        talkingPoints: [],
+      };
+    }
 
-  if (!db[guildId]) {
-    db[guildId] = {
-      talkingPoints: [],
-    };
-  }
+    data[guildId].talkingPoints.push(text);
 
-  db[guildId].talkingPoints.splice(idx - 1, 1);
+    dbService.set(data);
+  };
 
-  writeDb(db);
-};
+  const updateTalkingPoint = (guildId: string, idx: number, text = '') => {
+    const data = dbService.get();
 
-export const clearTalkingPoints = (guildId: string) => {
-  const db = fetchDb();
+    if (!data[guildId]) {
+      return null;
+    }
 
-  if (!db[guildId]) {
-    return;
-  }
+    data[guildId].talkingPoints = data[guildId].talkingPoints.map((item, i) => {
+      if (i === idx - 1) {
+        return text;
+      }
 
-  db[guildId].talkingPoints = [];
+      return item;
+    });
 
-  writeDb(db);
-};
+    dbService.set(data);
+  };
 
-export const formatTalkingPoints = (guildId: string) => {
-  const talkingPoints = getTalkingPoints(guildId);
+  const deleteTalkingPoint = (guildId: string, idx: number) => {
+    const data = dbService.get();
 
-  if (!talkingPoints.length) {
-    return 'No current talking points: Up to date 👍';
-  }
+    if (!data[guildId]) {
+      data[guildId] = {
+        talkingPoints: [],
+      };
+    }
 
-  return [
-    'Current talking points:',
-    ...talkingPoints.map((point, idx) => `${idx + 1}: ${point}`),
-  ].join('\n');
+    data[guildId].talkingPoints.splice(idx - 1, 1);
+
+    dbService.set(data);
+  };
+
+  const clearTalkingPoints = (guildId: string) => {
+    const data = dbService.get();
+
+    if (!data[guildId]) {
+      return;
+    }
+
+    data[guildId].talkingPoints = [];
+
+    dbService.set(data);
+  };
+
+  const formatTalkingPoints = (guildId: string) => {
+    const talkingPoints = getTalkingPoints(guildId);
+
+    if (!talkingPoints.length) {
+      return 'No current talking points: Up to date 👍';
+    }
+
+    return [
+      'Current talking points:',
+      ...talkingPoints.map((point, idx) => `${idx + 1}: ${point}`),
+    ].join('\n');
+  };
+
+  return {
+    formatTalkingPoints,
+    clearTalkingPoints,
+    getTalkingPoints,
+    setTalkingPoint,
+    updateTalkingPoint,
+    deleteTalkingPoint,
+  };
 };

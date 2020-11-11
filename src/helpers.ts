@@ -1,15 +1,6 @@
 import fs from 'fs';
-import path from 'path';
 
-const dbPath = path.join(__dirname, '..', 'store', 'db.json');
-
-export interface DB {
-  [key: string]: {
-    talkingPoints: string[];
-  };
-}
-
-const readFile = (path: string) => {
+export const readJsonFile = (path: string) => {
   try {
     return JSON.parse(fs.readFileSync(path, 'utf-8'));
   } catch {
@@ -19,14 +10,8 @@ const readFile = (path: string) => {
   }
 };
 
-export const writeDb = (db: DB) => {
-  const formatted = JSON.stringify(db, undefined, '\t');
+export const writeJsonFile = (path: string, data: any) => {
+  const formatted = JSON.stringify(data, undefined, '\t');
 
-  fs.writeFileSync(dbPath, formatted);
-};
-
-export const fetchDb = (): DB => {
-  const db = readFile(dbPath) as DB;
-
-  return db;
+  return fs.writeFileSync(path, formatted);
 };

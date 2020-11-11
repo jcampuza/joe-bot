@@ -6,7 +6,7 @@ export default createCommand({
 
   description: 'Help command',
 
-  execute(message, args, commands) {
+  execute(message, args, { commands }) {
     const formatted = commands.map(
       (command) => `${config.prefix}-${command.name}: ${command.description}`
     );
