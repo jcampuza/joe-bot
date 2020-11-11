@@ -3,7 +3,13 @@ const path = require('path');
 
 const dbPath = path.join(__dirname, '..', 'store', 'db.json');
 
-const readFile = (path) => {
+export interface DB {
+  [key: string]: {
+    talkingPoints: string[];
+  };
+}
+
+const readFile = (path: string) => {
   try {
     return JSON.parse(fs.readFileSync(path, 'utf-8'));
   } catch {
@@ -13,19 +19,14 @@ const readFile = (path) => {
   }
 };
 
-const writeDb = (db) => {
-  const formatted = JSON.stringify(db, '', '\t');
+export const writeDb = (db: DB) => {
+  const formatted = JSON.stringify(db, undefined, '\t');
 
   fs.writeFileSync(dbPath, formatted);
 };
 
-const fetchDb = () => {
-  const db = readFile(dbPath);
+export const fetchDb = (): DB => {
+  const db = readFile(dbPath) as DB;
 
   return db;
-};
-
-module.exports = {
-  writeDb,
-  fetchDb,
 };

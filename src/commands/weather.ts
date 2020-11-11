@@ -1,5 +1,5 @@
-const discord = require('discord.js');
-const axios = require('axios');
+import { createCommand } from '../command';
+import axios from 'axios';
 
 const client = axios.create({
   baseURL: 'https://api.openweathermap.org/data/2.5',
@@ -9,13 +9,11 @@ const client = axios.create({
   },
 });
 
-module.exports = {
+export default createCommand({
   name: 'weather',
+
   description: 'Fetch the current weather',
-  /**
-   *
-   * @param {discord.Message} msg
-   */
+
   execute: async (msg, args) => {
     const q = args.join(' ');
 
@@ -38,4 +36,4 @@ module.exports = {
       return msg.reply(`Oops, there was a problem fetching weather for ${q}`);
     }
   },
-};
+});

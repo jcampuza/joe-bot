@@ -1,6 +1,6 @@
-const { fetchDb, writeDb } = require('../helpers');
+import { fetchDb, writeDb } from '../helpers';
 
-const getTalkingPoints = (guildId) => {
+export const getTalkingPoints = (guildId: string) => {
   const db = fetchDb();
 
   if (!db[guildId]) {
@@ -12,7 +12,7 @@ const getTalkingPoints = (guildId) => {
   return db[guildId].talkingPoints;
 };
 
-const setTalkingPoint = (guildId, text = '') => {
+export const setTalkingPoint = (guildId: string, text = '') => {
   const db = fetchDb();
 
   if (!db[guildId]) {
@@ -26,7 +26,7 @@ const setTalkingPoint = (guildId, text = '') => {
   writeDb(db);
 };
 
-const updateTalkingPoint = (guildId, idx, text = '') => {
+export const updateTalkingPoint = (guildId: string, idx: number, text = '') => {
   const db = fetchDb();
 
   if (!db[guildId]) {
@@ -44,7 +44,7 @@ const updateTalkingPoint = (guildId, idx, text = '') => {
   writeDb(db);
 };
 
-const deleteTalkingPoint = (guildId, idx) => {
+export const deleteTalkingPoint = (guildId: string, idx: number) => {
   const db = fetchDb();
 
   if (!db[guildId]) {
@@ -58,7 +58,7 @@ const deleteTalkingPoint = (guildId, idx) => {
   writeDb(db);
 };
 
-const clearTalkingPoints = (guildId) => {
+export const clearTalkingPoints = (guildId: string) => {
   const db = fetchDb();
 
   if (!db[guildId]) {
@@ -70,7 +70,7 @@ const clearTalkingPoints = (guildId) => {
   writeDb(db);
 };
 
-const formatTalkingPoints = (guildId) => {
+export const formatTalkingPoints = (guildId: string) => {
   const talkingPoints = getTalkingPoints(guildId);
 
   if (!talkingPoints.length) {
@@ -81,13 +81,4 @@ const formatTalkingPoints = (guildId) => {
     'Current talking points:',
     ...talkingPoints.map((point, idx) => `${idx + 1}: ${point}`),
   ].join('\n');
-};
-
-module.exports = {
-  getTalkingPoints,
-  setTalkingPoint,
-  deleteTalkingPoint,
-  clearTalkingPoints,
-  formatTalkingPoints,
-  updateTalkingPoint,
 };
