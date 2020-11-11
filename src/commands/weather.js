@@ -26,8 +26,6 @@ module.exports = {
         },
       });
 
-      console.log(data);
-
       const title = `Current weather for ${data.name}`;
       const type = `${data.weather[0].main}: ${data.weather[0].description}`;
       const temp = `Temp: ${data.main.temp}, Feels Like: ${data.main.feels_like}`;

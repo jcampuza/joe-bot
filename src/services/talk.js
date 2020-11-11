@@ -26,6 +26,24 @@ const setTalkingPoint = (guildId, text = '') => {
   writeDb(db);
 };
 
+const updateTalkingPoint = (guildId, idx, text = '') => {
+  const db = fetchDb();
+
+  if (!db[guildId]) {
+    return null;
+  }
+
+  db[guildId].talkingPoints = db[guildId].talkingPoints.map((item, i) => {
+    if (i === idx - 1) {
+      return text;
+    }
+
+    return item;
+  });
+
+  writeDb(db);
+};
+
 const deleteTalkingPoint = (guildId, idx) => {
   const db = fetchDb();
 
@@ -71,4 +89,5 @@ module.exports = {
   deleteTalkingPoint,
   clearTalkingPoints,
   formatTalkingPoints,
+  updateTalkingPoint,
 };

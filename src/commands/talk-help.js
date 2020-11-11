@@ -1,5 +1,4 @@
 const Discord = require('discord.js');
-const { getTalkingPoints, formatTalkingPoints } = require('../services/talk');
 
 module.exports = {
   name: 'talk-help',

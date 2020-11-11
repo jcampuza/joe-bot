@@ -1,5 +1,5 @@
 const Discord = require('discord.js');
-const { getTalkingPoints, formatTalkingPoints, deleteTalkingPoint } = require('../services/talk');
+const { formatTalkingPoints, deleteTalkingPoint } = require('../services/talk');
 
 module.exports = {
   name: 'talk-delete',

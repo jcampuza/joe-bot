@@ -11,7 +11,7 @@ module.exports = {
    */
   execute(message, args) {
     if (!args.length) {
-      message.reply('No talking point was set');
+      return message.reply('No talking point was set');
     }
 
     setTalkingPoint(message.guild.id, args.join(' '));
