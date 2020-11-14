@@ -6,15 +6,21 @@ export default createCommand({
   description: 'Delete a talking point by its ID',
 
   execute(message, args, { talkService }) {
-    const id = parseInt(args[0]);
+    const rawIdList = args[0];
 
-    if (!args[0] || isNaN(id)) {
+    if (!rawIdList.length) {
       return message.reply('A valid talking point id is required');
     }
 
-    talkService.deleteTalkingPoint(message.guild!.id, id);
+    const idList = rawIdList.split(',').map((id) => Number(id));
 
-    message.reply('Talking point deleted');
+    if (!idList.length || idList.some((id) => isNaN(id))) {
+      return message.reply('A valid talking point id is required');
+    }
+
+    const count = talkService.deleteTalkingPoints(message.guild!.id, idList);
+
+    message.reply(`${count} Talking points deleted`);
     message.channel.send(talkService.formatTalkingPoints(message.guild!.id));
   },
 });

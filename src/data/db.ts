@@ -7,7 +7,7 @@ export interface DB {
   };
 }
 
-const dbPath = path.join(__dirname, '..', 'store', 'db.json');
+const dbPath = path.join(__dirname, '../..', 'store', 'db.json');
 
 /**
  * Small wrapper around writing/reading to db json file

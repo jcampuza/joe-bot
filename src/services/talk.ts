@@ -48,7 +48,7 @@ export const createTalkService = (dbService = createDbUtils()) => {
     dbService.set(data);
   };
 
-  const deleteTalkingPoint = (guildId: string, idx: number) => {
+  const deleteTalkingPoints = (guildId: string, indexes: number[]) => {
     const data = dbService.get();
 
     if (!data[guildId]) {
@@ -57,9 +57,19 @@ export const createTalkService = (dbService = createDbUtils()) => {
       };
     }
 
-    data[guildId].talkingPoints.splice(idx - 1, 1);
+    const originalLength = data[guildId].talkingPoints.length;
+
+    const filteredTalkingPoints = data[guildId].talkingPoints.filter(
+      (_, idx) => {
+        return indexes.includes(idx + 1) ? false : true;
+      }
+    );
+
+    data[guildId].talkingPoints = filteredTalkingPoints;
 
     dbService.set(data);
+
+    return originalLength - filteredTalkingPoints.length;
   };
 
   const clearTalkingPoints = (guildId: string) => {
@@ -93,6 +103,6 @@ export const createTalkService = (dbService = createDbUtils()) => {
     getTalkingPoints,
     setTalkingPoint,
     updateTalkingPoint,
-    deleteTalkingPoint,
+    deleteTalkingPoints,
   };
 };

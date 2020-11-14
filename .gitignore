@@ -1,4 +1,4 @@
 node_modules
 .env
-store
 .DS_Store
+store/db.json
