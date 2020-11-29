@@ -1,19 +1,30 @@
-import { Collection } from 'discord.js';
+import { Collection, Message } from 'discord.js';
 import { Command } from './command';
-import { createDbUtils } from './data/db';
-import { createTalkService } from './services/talk';
+import { DBService } from './data/db';
+import { GuildService } from './services/guild';
+import { LanguageService } from './services/language';
+import { TalkService } from './services/talk';
 
 /**
  * Creats context that is available for commands to use per request
  */
-export const createContext = (commands: Collection<string, Command>) => {
-  const db = createDbUtils();
-  const talkService = createTalkService(db);
+export const createContext = (
+  commands: Collection<string, Command>,
+  message: Message
+) => {
+  const guildId = message.guild!.id;
+  const dbService = new DBService();
+  const guildService = new GuildService(dbService);
+  const talkService = new TalkService(dbService);
+  const languageService = new LanguageService(dbService, guildService);
 
   return {
+    guildId,
     commands,
+    guildService,
     talkService,
-    db,
+    languageService,
+    dbService,
   };
 };
 

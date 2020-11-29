@@ -7,15 +7,24 @@ import TalkEdit from './talk-edit';
 import TalkHelp from './talk-help';
 import TalkList from './talk-list';
 import Weather from './weather';
+import VocabToggle from './vocab-toggle';
+import VocabList from './vocab-list';
 
 export default {
+  // Misc Commands
   Help,
   Pong,
+  Weather,
+
+  // Talk Commands
   TalkAdd,
   TalkClear,
   TalkDelete,
   TalkEdit,
   TalkHelp,
   TalkList,
-  Weather,
+
+  // Vocab Commands
+  VocabToggle,
+  VocabList,
 };

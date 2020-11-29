@@ -2,6 +2,7 @@ require('dotenv').config();
 import Disord from 'discord.js';
 import { Command } from './command';
 import Commands from './commands';
+import Listeners from './listeners';
 import config from './config';
 import { createContext } from './context';
 
@@ -22,22 +23,59 @@ client.once('ready', () => {
 });
 
 client.on('message', (message) => {
-  if (!message.content.startsWith(prefix) || message.author.bot) {
+  if (message.author.bot) {
     return;
   }
 
+  // Parse arguments
+  const guildId = message.guild?.id;
   const args = message.content.slice(prefix.length).trim().split(/ +/);
   const command = args.shift()?.toLowerCase();
 
-  if (!command || !commands.get(command)) {
-    return;
-  }
+  // Ensure the guild is setup in the DB before handling a command or listener
+  const context = createContext(commands, message);
+  context.guildService.ensureGuild(guildId);
 
-  try {
-    commands.get(command)!.execute(message, args, createContext(commands));
-  } catch (error) {
-    console.error(error);
-    message.reply(`There was an issue executing command: ${command}`);
+  const runCommand = () => {
+    if (!message.content.startsWith(prefix)) {
+      return false;
+    }
+
+    if (!command || !commands.get(command)) {
+      return false;
+    }
+
+    // Run command
+    try {
+      commands.get(command)!.execute(message, args, context);
+    } catch (error) {
+      console.error(error);
+      message.reply(`There was an issue executing command: ${command}`);
+    }
+
+    return true;
+  };
+
+  const runListeners = () => {
+    try {
+      const enabledListeners = Object.values(Listeners).filter((listener) =>
+        listener.enabled(message, context)
+      );
+
+      for (const listener of enabledListeners) {
+        listener.execute(message, context);
+      }
+    } catch (error) {
+      console.error(error);
+      message.reply('A listener failed to run on this message');
+    }
+  };
+
+  const ranCommand = runCommand();
+
+  // Don't run listeners on commands
+  if (!ranCommand) {
+    runListeners();
   }
 });
 
