@@ -1,3 +1,5 @@
+import { Buffer } from 'buffer';
+import { MessageAttachment } from 'discord.js';
 import { createCommand } from '../command';
 
 export default createCommand({
@@ -15,6 +17,9 @@ export default createCommand({
       ),
     ].join('\n');
 
-    return message.reply(reply);
+    const buffer = Buffer.from(reply);
+    const attachment = new MessageAttachment(buffer, 'vocab.txt');
+
+    return message.reply("Here's the current vocab!", attachment);
   },
 });
