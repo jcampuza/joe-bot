@@ -1,5 +1,7 @@
 import { createListener } from '../listener';
 
+const splitLines = (content: string) => content.split('\n');
+
 const shouldExecute = (content: string) => {
   return content.includes('=');
 };
@@ -8,8 +10,8 @@ const parseMessage = (content: string) => {
   const [vocab, definition] = content.split('=');
 
   return {
-    vocab: vocab.trim(),
-    definition: definition.trim(),
+    vocab: vocab?.trim() ?? '',
+    definition: definition?.trim() ?? '',
   };
 };
 
@@ -28,8 +30,12 @@ export default createListener({
       return;
     }
 
-    const { vocab, definition } = parseMessage(message.content);
+    for (const line of splitLines(content)) {
+      const { vocab, definition } = parseMessage(line);
 
-    languageService.addVocab(guildId, vocab, definition);
+      if (vocab && definition) {
+        languageService.addVocab(guildId, vocab, definition);
+      }
+    }
   },
 });

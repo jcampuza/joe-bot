@@ -10,7 +10,9 @@ export default createCommand({
 
     const reply = [
       'Current phrases:',
-      ...phrases.map((point, idx) => `${idx + 1}: ${point}`),
+      ...phrases.map(
+        (point, idx) => `${idx + 1}: ${point.phrase} - hits: ${point.hits}`
+      ),
     ].join('\n');
 
     return message.reply(reply);

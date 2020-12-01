@@ -22,11 +22,19 @@ export class LanguageService {
   addVocab(guildId: string, phrase: string, definition: string) {
     const guild = this.guildService.getGuild(guildId);
 
-    guild.language.vocab[phrase] = {
-      phrase,
-      definition,
-      hits: 0,
-    };
+    if (guild.language.vocab[phrase]) {
+      guild.language.vocab[phrase] = {
+        ...guild.language.vocab[phrase],
+        phrase,
+        definition,
+      };
+    } else {
+      guild.language.vocab[phrase] = {
+        phrase,
+        definition,
+        hits: 0,
+      };
+    }
 
     this.guildService.setGuild(guild);
   }
@@ -34,9 +42,7 @@ export class LanguageService {
   getPhrases(guildId: string) {
     const guild = this.guildService.getGuild(guildId);
 
-    const phrases = Object.values(guild.language.vocab).map(
-      (vocab) => vocab.phrase
-    );
+    const phrases = Object.values(guild.language.vocab);
 
     return phrases;
   }
