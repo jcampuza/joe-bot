@@ -26,7 +26,7 @@ export default createListener({
     const phrases = languageService.getPhrases(guildId);
 
     for (const phrase of phrases) {
-      if (content.includes(phrase)) {
+      if (content.includes(phrase.phrase)) {
         languageService.updateHits(guildId, phrase);
       }
     }

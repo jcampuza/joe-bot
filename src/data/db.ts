@@ -1,7 +1,7 @@
 import path from 'path';
 import { readJsonFile, writeJsonFile } from '../helpers';
 
-interface Vocab {
+export interface Vocab {
   phrase: string;
   definition: string;
   hits: number;

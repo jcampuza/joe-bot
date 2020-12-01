@@ -1,4 +1,4 @@
-import { DBService } from '../data/db';
+import { DBService, Vocab } from '../data/db';
 import { GuildService } from './guild';
 
 export class LanguageService {
@@ -47,11 +47,11 @@ export class LanguageService {
     return phrases;
   }
 
-  updateHits(guildId: string, phrase: string) {
+  updateHits(guildId: string, phrase: Vocab) {
     const guild = this.guildService.getGuild(guildId);
-    const vocab = guild.language.vocab[phrase];
+    const vocab = guild.language.vocab[phrase.phrase];
 
-    guild.language.vocab[phrase] = { ...vocab, hits: vocab.hits + 1 };
+    guild.language.vocab[phrase.phrase] = { ...vocab, hits: vocab.hits + 1 };
 
     this.guildService.setGuild(guild);
   }
