@@ -1,4 +1,4 @@
-import { createCommand } from '../command';
+import { createCommand } from '../lib/command';
 
 const valid = ['true', 'false'];
 

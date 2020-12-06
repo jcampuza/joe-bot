@@ -1,4 +1,4 @@
-import { createCommand } from '../command';
+import { createCommand } from '../lib/command';
 import axios from 'axios';
 
 const client = axios.create({

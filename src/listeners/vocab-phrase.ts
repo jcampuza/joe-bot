@@ -1,4 +1,5 @@
-import { createListener } from '../listener';
+import { createListener } from '../lib/listener';
+import { logger } from '../lib/logger';
 
 const splitLines = (content: string) => content.split('\n');
 
@@ -7,7 +8,7 @@ const shouldExecute = (content: string) => {
 };
 
 const parseMessage = (content: string) => {
-  const [vocab, definition] = content.split('=');
+  const [vocab, definition] = content.split(' = ');
 
   return {
     vocab: vocab?.trim() ?? '',
@@ -34,6 +35,7 @@ export default createListener({
       const { vocab, definition } = parseMessage(line);
 
       if (vocab && definition) {
+        logger.log(`Adding vocab: ${vocab}, ${definition}`);
         languageService.addVocab(guildId, vocab, definition);
       }
     }

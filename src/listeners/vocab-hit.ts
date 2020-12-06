@@ -1,4 +1,5 @@
-import { createListener } from '../listener';
+import { createListener } from '../lib/listener';
+import { logger } from '../lib/logger';
 
 const shouldExecute = (content: string) => {
   return content.includes('=');
@@ -27,6 +28,7 @@ export default createListener({
 
     for (const phrase of phrases) {
       if (content.includes(phrase.phrase)) {
+        logger.log(`Phrase hit: ${phrase.phrase}`);
         languageService.updateHits(guildId, phrase);
       }
     }

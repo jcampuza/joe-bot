@@ -1,5 +1,5 @@
 import path from 'path';
-import { readJsonFile, writeJsonFile } from '../helpers';
+import { readJsonFile, writeJsonFile } from '../lib/helpers';
 
 export interface Vocab {
   phrase: string;

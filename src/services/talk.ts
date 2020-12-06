@@ -1,4 +1,4 @@
-import { DBService } from '../data/db';
+import { DBService } from './db';
 
 export class TalkService {
   constructor(private dbService: DBService) {}

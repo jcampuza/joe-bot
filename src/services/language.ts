@@ -1,4 +1,4 @@
-import { DBService, Vocab } from '../data/db';
+import { DBService, Vocab } from './db';
 import { GuildService } from './guild';
 
 export class LanguageService {

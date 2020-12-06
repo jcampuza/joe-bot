@@ -5,7 +5,7 @@
   "license": "MIT",
   "scripts": {
     "dev": "ts-node-dev src/index.ts --ignore 'store/*'",
-    "start": "ts-node -T src/index.ts"
+    "start": "tsc && NODE_ENV=production node dist/index.js"
   },
   "dependencies": {
     "axios": "^0.21.0",

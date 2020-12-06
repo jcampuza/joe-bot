@@ -1,4 +1,4 @@
-import { DBGuild, DBService } from '../data/db';
+import { DBGuild, DBService } from './db';
 
 const updateGuild = (guildId: string, guild: Partial<DBGuild>): DBGuild => {
   const copy = { id: guildId, ...guild };

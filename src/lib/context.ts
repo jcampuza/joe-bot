@@ -1,9 +1,9 @@
 import { Collection, Message } from 'discord.js';
 import { Command } from './command';
-import { DBService } from './data/db';
-import { GuildService } from './services/guild';
-import { LanguageService } from './services/language';
-import { TalkService } from './services/talk';
+import { DBService } from '../services/db';
+import { GuildService } from '../services/guild';
+import { LanguageService } from '../services/language';
+import { TalkService } from '../services/talk';
 
 /**
  * Creats context that is available for commands to use per request

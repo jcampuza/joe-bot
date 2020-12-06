@@ -1,10 +1,10 @@
 require('dotenv').config();
 import Disord from 'discord.js';
-import { Command } from './command';
+import { Command } from './lib/command';
 import Commands from './commands';
 import Listeners from './listeners';
-import config from './config';
-import { createContext } from './context';
+import config from './lib/config';
+import { createContext } from './lib/context';
 
 const { prefix, token } = config;
 
@@ -78,5 +78,5 @@ client.on('message', (message) => {
     runListeners();
   }
 });
-
+console.log(process.env.NODE_ENV);
 client.login(token);
