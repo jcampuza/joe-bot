@@ -78,5 +78,5 @@ client.on('message', (message) => {
     runListeners();
   }
 });
-console.log(process.env.NODE_ENV);
+
 client.login(token);
