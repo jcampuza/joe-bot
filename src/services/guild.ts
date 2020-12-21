@@ -36,6 +36,14 @@ export class GuildService {
     this.dbService.set(data);
   }
 
+  ensureAllGuilds() {
+    const data = this.dbService.get();
+
+    for (const guild of Object.values(data)) {
+      this.ensureGuild(guild.id);
+    }
+  }
+
   getGuild(guildId: string) {
     return this.dbService.get()[guildId];
   }

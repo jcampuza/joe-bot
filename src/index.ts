@@ -19,6 +19,8 @@ for (const command of Object.values(Commands)) {
 const client = new Disord.Client();
 const applicationContext = createApplicationContext(client);
 
+applicationContext.guildService.ensureAllGuilds();
+
 client.once('ready', () => {
   console.log('Joe Bot successfully connected and ready');
 });
