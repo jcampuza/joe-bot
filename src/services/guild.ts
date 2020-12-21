@@ -14,6 +14,10 @@ const updateGuild = (guildId: string, guild: Partial<DBGuild>): DBGuild => {
     };
   }
 
+  if (!copy.reminders) {
+    copy.reminders = [];
+  }
+
   return copy as DBGuild;
 };
 
@@ -42,5 +46,9 @@ export class GuildService {
     db[guild.id] = guild;
 
     return this.dbService.set(db);
+  }
+
+  getGuilds() {
+    return Object.values(this.dbService.get());
   }
 }

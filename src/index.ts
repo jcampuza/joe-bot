@@ -4,7 +4,7 @@ import { Command } from './lib/command';
 import Commands from './commands';
 import Listeners from './listeners';
 import config from './lib/config';
-import { createContext } from './lib/context';
+import { createApplicationContext, createContext } from './lib/context';
 
 const { prefix, token } = config;
 
@@ -17,6 +17,7 @@ for (const command of Object.values(Commands)) {
 
 // Setup client
 const client = new Disord.Client();
+const applicationContext = createApplicationContext(client);
 
 client.once('ready', () => {
   console.log('Joe Bot successfully connected and ready');
@@ -33,7 +34,7 @@ client.on('message', (message) => {
   const command = args.shift()?.toLowerCase();
 
   // Ensure the guild is setup in the DB before handling a command or listener
-  const context = createContext(commands, message);
+  const context = createContext(commands, message, applicationContext);
   context.guildService.ensureGuild(guildId);
 
   const runCommand = () => {
@@ -79,4 +80,12 @@ client.on('message', (message) => {
   }
 });
 
-client.login(token);
+client.login(token).then(() => {
+  const { jobService, reminderService } = applicationContext;
+
+  const reminderJob = jobService.createJob('reminders', 1000, () => {
+    return reminderService.sendExpiredReminders();
+  });
+
+  reminderJob.start();
+});

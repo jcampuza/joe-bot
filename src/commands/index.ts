@@ -9,6 +9,7 @@ import TalkList from './talk-list';
 import Weather from './weather';
 import VocabToggle from './vocab-toggle';
 import VocabList from './vocab-list';
+import Reminder from './reminder';
 
 export default {
   // Misc Commands
@@ -27,4 +28,7 @@ export default {
   // Vocab Commands
   VocabToggle,
   VocabList,
+
+  // Reminders
+  Reminder,
 };

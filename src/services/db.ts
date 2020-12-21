@@ -7,6 +7,15 @@ export interface Vocab {
   hits: number;
 }
 
+export interface Reminder {
+  id: string;
+  guildId: string;
+  user: string;
+  userId: string;
+  message: string;
+  time: string;
+}
+
 export interface DBGuild {
   id: string;
   talkingPoints: string[];
@@ -14,6 +23,7 @@ export interface DBGuild {
     enabled: boolean;
     vocab: Record<string, Vocab>;
   };
+  reminders: Reminder[];
 }
 
 export interface DB {
