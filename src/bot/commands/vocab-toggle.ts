@@ -16,7 +16,7 @@ export default createCommand({
   description:
     'Turns listening for vocabulary on. Sentences in the structure of "Term" = "Term" will be picked up',
 
-  execute(message, args, { languageService }) {
+  async execute(message, args, { languageService }) {
     if (!args.length) {
       return message.reply('A value or true or false must be provided');
     }
@@ -32,6 +32,6 @@ export default createCommand({
     const bool = convertStringToBool(toggle);
     languageService.toggleLanguageService(message.guild!.id, bool);
 
-    return message.reply(`Vocab listener ${bool ? 'enabled' : 'disabled'}`);
+    await message.reply(`Vocab listener ${bool ? 'enabled' : 'disabled'}`);
   },
 });

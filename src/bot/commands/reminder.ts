@@ -28,7 +28,7 @@ export default createCommand({
   description:
     'Adds a reminder, when the given time expires a message will be sent back to yourself.\nAll times in CST',
 
-  execute(message, args, { reminderService, guildId }) {
+  async execute(message, args, { reminderService, guildId }) {
     if (!args.length) {
       return message.reply(
         'No reminder was present: \nformat: `(at|in) [time] (send) [message]`\nex: `in 2 minutes send Hello!`'
@@ -38,9 +38,10 @@ export default createCommand({
     const parsed = parseReminder(message.content);
 
     if (!parsed) {
-      return message.reply(
+      await message.reply(
         'Unable to parse reminder: \nformat: `(at|in) [time] (send) [message]`\nex: `in 2 minutes send Hello!`'
       );
+      return;
     }
 
     reminderService.createReminder(guildId, {
@@ -50,6 +51,6 @@ export default createCommand({
       user: message.author.toString(),
     });
 
-    return message.reply('Reminder set 👍');
+    await message.reply('Reminder set 👍');
   },
 });

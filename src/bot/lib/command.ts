@@ -4,7 +4,7 @@ import { Context } from './context';
 export interface Command {
   name: string;
   description: string;
-  execute: (message: Discord.Message, args: string[], context: Context) => void;
+  execute(message: Discord.Message, args: string[], context: Context): void;
 }
 
 /**

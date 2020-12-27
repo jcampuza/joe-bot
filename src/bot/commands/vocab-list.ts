@@ -9,7 +9,7 @@ export default createCommand({
 
   description: 'Lists all vocab encountered thus far',
 
-  execute(message, args, { languageService, guildId }) {
+  async execute(message, args, { languageService, guildId }) {
     const phrases = languageService.getPhrases(guildId);
 
     // Generate CSV
@@ -23,6 +23,6 @@ export default createCommand({
     const buffer = Buffer.from(reply);
     const attachment = new MessageAttachment(buffer, 'vocab.csv');
 
-    return message.reply("Here's the current vocab!", attachment);
+    await message.reply("Here's the current vocab!", attachment);
   },
 });

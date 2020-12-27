@@ -6,7 +6,7 @@ export default createCommand({
 
   description: 'Help command',
 
-  execute(message, args, { commands }) {
+  async execute(message, args, { commands }) {
     const formatted = commands.map(
       (command) => `${config.prefix}${command.name}: ${command.description}`
     );
@@ -16,6 +16,6 @@ export default createCommand({
       ...formatted,
     ].join('\n');
 
-    return message.reply(response);
+    await message.reply(response);
   },
 });

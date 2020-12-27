@@ -5,7 +5,7 @@ export default createCommand({
 
   description: 'Ping!',
 
-  execute(message, args) {
-    message.reply('Pong');
+  async execute(message, args) {
+    await message.reply('Pong');
   },
 });

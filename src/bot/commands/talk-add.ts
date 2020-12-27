@@ -5,14 +5,16 @@ export default createCommand({
 
   description: 'Add a talking point',
 
-  execute(message, args, { talkService }) {
+  async execute(message, args, { talkService }) {
     if (!args.length) {
       return message.reply('No talking point was set');
     }
 
     talkService.setTalkingPoint(message.guild!.id, args.join(' '));
 
-    message.reply('Talking point added!');
-    message.channel.send(talkService.formatTalkingPoints(message.guild!.id));
+    await message.reply('Talking point added!');
+    await message.channel.send(
+      talkService.formatTalkingPoints(message.guild!.id)
+    );
   },
 });

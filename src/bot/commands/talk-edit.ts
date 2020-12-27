@@ -5,7 +5,7 @@ export default createCommand({
 
   description: 'Delete a talking point by its ID',
 
-  execute(message, args, { talkService }) {
+  async execute(message, args, { talkService }) {
     const [rawId, ...text] = args;
     const id = parseInt(rawId);
 
@@ -21,7 +21,9 @@ export default createCommand({
 
     talkService.updateTalkingPoint(message.guild!.id, id, text.join(' '));
 
-    message.reply('Talking point Updated');
-    message.channel.send(talkService.formatTalkingPoints(message.guild!.id));
+    await message.reply('Talking point Updated');
+    await message.channel.send(
+      talkService.formatTalkingPoints(message.guild!.id)
+    );
   },
 });

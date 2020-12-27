@@ -5,7 +5,7 @@ export default createCommand({
 
   description: 'List all talking points',
 
-  execute(message, _, { talkService }) {
-    message.reply(talkService.formatTalkingPoints(message.guild!.id));
+  async execute(message, _, { talkService }) {
+    await message.reply(talkService.formatTalkingPoints(message.guild!.id));
   },
 });

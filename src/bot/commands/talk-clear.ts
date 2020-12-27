@@ -5,10 +5,12 @@ export default createCommand({
 
   description: 'Clear all talking point',
 
-  execute(message, _, { talkService }) {
+  async execute(message, _, { talkService }) {
     talkService.clearTalkingPoints(message.guild!.id);
 
-    message.reply('Talking points cleared');
-    message.channel.send(talkService.formatTalkingPoints(message.guild!.id));
+    await message.reply('Talking points cleared');
+    await message.channel.send(
+      talkService.formatTalkingPoints(message.guild!.id)
+    );
   },
 });

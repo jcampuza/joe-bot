@@ -5,7 +5,7 @@ export default createCommand({
 
   description: 'List talking points related commands',
 
-  execute(message, args, { commands }) {
+  async execute(message, args, { commands }) {
     const talkCommands = commands.filter((value, key) =>
       value.name.startsWith('talk')
     );
@@ -18,6 +18,6 @@ export default createCommand({
       '\n'
     );
 
-    message.reply(response);
+    await message.reply(response);
   },
 });

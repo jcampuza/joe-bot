@@ -1,4 +1,5 @@
 import path from 'path';
+import { ROOT } from '../../paths';
 import { readJsonFile, writeJsonFile } from '../lib/helpers';
 
 export interface Vocab {
@@ -30,7 +31,7 @@ export interface DB {
   [key: string]: DBGuild;
 }
 
-const dbPath = path.join(__dirname, '../..', 'store', 'db.json');
+const dbPath = path.join(ROOT, 'store', 'db.json');
 
 /**
  * Small wrapper around writing/reading to db json file

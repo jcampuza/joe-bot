@@ -14,7 +14,7 @@ export default createCommand({
 
   description: 'Fetch the current weather',
 
-  execute: async (msg, args) => {
+  async execute(msg, args) {
     const q = args.join(' ');
 
     try {
@@ -31,9 +31,9 @@ export default createCommand({
 
       const response = [title, type, temp, wind].join('\n');
 
-      return msg.reply(response);
+      await msg.reply(response);
     } catch (err) {
-      return msg.reply(`Oops, there was a problem fetching weather for ${q}`);
+      await msg.reply(`Oops, there was a problem fetching weather for ${q}`);
     }
   },
 });

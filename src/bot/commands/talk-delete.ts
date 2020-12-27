@@ -5,7 +5,7 @@ export default createCommand({
 
   description: 'Delete a talking point by its ID',
 
-  execute(message, args, { talkService }) {
+  async execute(message, args, { talkService }) {
     const rawIdList = args[0];
 
     if (!rawIdList.length) {
@@ -20,7 +20,9 @@ export default createCommand({
 
     const count = talkService.deleteTalkingPoints(message.guild!.id, idList);
 
-    message.reply(`${count} Talking points deleted`);
-    message.channel.send(talkService.formatTalkingPoints(message.guild!.id));
+    await message.reply(`${count} Talking points deleted`);
+    await message.channel.send(
+      talkService.formatTalkingPoints(message.guild!.id)
+    );
   },
 });
