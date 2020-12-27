@@ -10,7 +10,7 @@ interface TokenPayload {
 const signAsync = (payload: any): Promise<string> =>
   new Promise((resolve, reject) => {
     const callback: SignCallback = (err, signed) => {
-      return err ? reject(err) : resolve(signed);
+      return err ? reject(err) : resolve(signed!);
     };
 
     jwt.sign(payload, SECRET, callback);
