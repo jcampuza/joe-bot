@@ -1,5 +1,6 @@
 import { createCommand } from '../lib/command';
 import { parse } from 'chrono-node';
+import { ReminderService } from '../../data/reminders';
 
 const reminderRegex = /(?<time>(in|at) .+) send (?<message>.+)/i;
 
@@ -28,7 +29,10 @@ export default createCommand({
   description:
     'Adds a reminder, when the given time expires a message will be sent back to yourself.\nAll times in CST',
 
-  async execute(message, args, { reminderService, guildId }) {
+  async execute(message, args, context) {
+    const guildId = context.guildId;
+    const reminderService = context.get(ReminderService);
+
     if (!args.length) {
       return message.reply(
         'No reminder was present: \nformat: `(at|in) [time] (send) [message]`\nex: `in 2 minutes send Hello!`'

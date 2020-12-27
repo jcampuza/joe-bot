@@ -1,5 +1,5 @@
 import { createCommand } from '../lib/command';
-import config from '../lib/config';
+import config from '../../config/config';
 
 export default createCommand({
   name: 'help',

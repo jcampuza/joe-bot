@@ -1,6 +1,6 @@
 import path from 'path';
-import { ROOT } from '../../paths';
-import { readJsonFile, writeJsonFile } from '../lib/helpers';
+import { ROOT } from '../paths';
+import { readJsonFile, writeJsonFile } from '../bot/lib/helpers';
 
 export interface Vocab {
   phrase: string;

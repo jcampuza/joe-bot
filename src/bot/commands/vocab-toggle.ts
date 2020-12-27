@@ -1,3 +1,4 @@
+import { LanguageService } from '../../data/language';
 import { createCommand } from '../lib/command';
 
 const valid = ['true', 'false'];
@@ -16,7 +17,9 @@ export default createCommand({
   description:
     'Turns listening for vocabulary on. Sentences in the structure of "Term" = "Term" will be picked up',
 
-  async execute(message, args, { languageService }) {
+  async execute(message, args, context) {
+    const languageService = context.get(LanguageService);
+
     if (!args.length) {
       return message.reply('A value or true or false must be provided');
     }

@@ -1,15 +1,14 @@
-import { isFulfilled, reflect, uuid } from '../lib/helpers';
+import { isFulfilled, reflect, uuid } from '../bot/lib/helpers';
 import { DBService, Reminder } from './db';
 import { GuildService } from './guild';
-import Disord, { Client } from 'discord.js';
+import { Client } from 'discord.js';
 import { userInfo } from 'os';
 import { resolve } from 'path';
 
 export class ReminderService {
   constructor(
     private guildService: GuildService,
-    private dbService: DBService,
-    private client: Client
+    private dbService: DBService
   ) {}
 
   getReminders(guildId: string) {
@@ -79,11 +78,11 @@ export class ReminderService {
     });
   }
 
-  async sendExpiredReminders() {
+  async sendExpiredReminders(client: Client) {
     const expiredReminders = this.getAllExpiredReminders();
 
     const promises = expiredReminders.map((reminder) => {
-      const promise = this.client.users
+      const promise = client.users
         .fetch(reminder.userId)
         .then((user) => user.send(`Reminder: ${reminder.message}`))
         .then(() => reminder);

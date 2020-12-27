@@ -1,10 +1,14 @@
 import * as Discord from 'discord.js';
-import { Context } from './context';
+import { CommandContext } from '../../context';
 
 export interface Command {
   name: string;
   description: string;
-  execute(message: Discord.Message, args: string[], context: Context): void;
+  execute(
+    message: Discord.Message,
+    args: string[],
+    context: CommandContext
+  ): void;
 }
 
 /**

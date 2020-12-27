@@ -1,3 +1,4 @@
+import { LanguageService } from '../../data/language';
 import { createListener } from '../lib/listener';
 import { logger } from '../lib/logger';
 
@@ -20,11 +21,17 @@ export default createListener({
   name: 'vocab-phrase',
   description:
     'Listens for commands containing a vocab snippet and stores it for later use',
-  enabled(_, { languageService, guildId }) {
+  enabled(_, context) {
+    const languageService = context.get(LanguageService);
+    const guildId = context.guildId;
+
     return languageService.getEnabled(guildId);
   },
 
-  execute(message, { guildId, languageService }) {
+  execute(message, context) {
+    const languageService = context.get(LanguageService);
+    const guildId = context.guildId;
+
     const content = message.content;
 
     if (!shouldExecute(content)) {

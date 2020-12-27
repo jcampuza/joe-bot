@@ -1,3 +1,4 @@
+import { TalkService } from '../../data/talk';
 import { createCommand } from '../lib/command';
 
 export default createCommand({
@@ -5,7 +6,9 @@ export default createCommand({
 
   description: 'Delete a talking point by its ID',
 
-  async execute(message, args, { talkService }) {
+  async execute(message, args, context) {
+    const talkService = context.get(TalkService);
+
     const rawIdList = args[0];
 
     if (!rawIdList.length) {

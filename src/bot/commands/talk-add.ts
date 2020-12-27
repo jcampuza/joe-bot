@@ -1,3 +1,4 @@
+import { TalkService } from '../../data/talk';
 import { createCommand } from '../lib/command';
 
 export default createCommand({
@@ -5,7 +6,9 @@ export default createCommand({
 
   description: 'Add a talking point',
 
-  async execute(message, args, { talkService }) {
+  async execute(message, args, context) {
+    const talkService = context.get(TalkService);
+
     if (!args.length) {
       return message.reply('No talking point was set');
     }

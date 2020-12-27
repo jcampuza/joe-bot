@@ -1,8 +1,7 @@
-import { User } from '../models/user';
+import { User } from '../entities/user';
 import jwt, { SignCallback, VerifyCallback } from 'jsonwebtoken';
-import { rejects } from 'assert';
 
-const SECRET = 'secret';
+const SECRET = process.env.AUTH_SECRET;
 
 interface TokenPayload {
   userId: string;

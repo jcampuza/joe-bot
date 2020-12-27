@@ -11,16 +11,17 @@ import {
   Connection,
   Repository,
 } from 'typeorm';
-import { User } from './models/user';
+import { User } from './entities/user';
 import { ROOT } from '../paths';
 import { AuthService } from './services/auth';
-import { authRoutes } from './routes/auth';
+import { ApplicationContext } from '../context';
 
 declare global {
   namespace Express {
     export interface Request {
       user: User;
       context: {
+        app: ApplicationContext;
         db: Connection;
         repositories: {
           userRepo: Repository<User>;
@@ -35,12 +36,12 @@ declare global {
 
 const options: ConnectionOptions = {
   type: 'sqlite',
-  database: path.join(ROOT, 'sqlite3.db'),
+  database: path.join(ROOT, 'joe-bot.db'),
   entities: [User],
   logging: true,
 };
 
-async function main() {
+export async function startApi(appContext: ApplicationContext) {
   const connection = await createConnection(options);
   const userRepo = await connection.getRepository(User);
   const authService = new AuthService();
@@ -53,6 +54,7 @@ async function main() {
 
   app.use((req, res, next) => {
     req.context = {
+      app: appContext,
       db: connection,
       repositories: {
         userRepo,
@@ -71,5 +73,3 @@ async function main() {
     console.log('Api listening on port 8080');
   });
 }
-
-main();

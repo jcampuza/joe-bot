@@ -8,9 +8,9 @@ import {
 } from 'typeorm';
 import { hash, compare } from 'bcrypt';
 
-@Entity()
+@Entity('users')
 export class User {
-  @PrimaryGeneratedColumn({ type: 'uuid' })
+  @PrimaryGeneratedColumn('uuid')
   id!: string;
 
   @Column()

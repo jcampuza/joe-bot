@@ -1,3 +1,4 @@
+import { TalkService } from '../../data/talk';
 import { createCommand } from '../lib/command';
 
 export default createCommand({
@@ -5,7 +6,9 @@ export default createCommand({
 
   description: 'Clear all talking point',
 
-  async execute(message, _, { talkService }) {
+  async execute(message, _, context) {
+    const talkService = context.get(TalkService);
+
     talkService.clearTalkingPoints(message.guild!.id);
 
     await message.reply('Talking points cleared');
