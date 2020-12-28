@@ -3,7 +3,6 @@ import {
   BeforeUpdate,
   Column,
   Entity,
-  PrimaryColumn,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { hash, compare } from 'bcrypt';

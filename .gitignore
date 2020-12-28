@@ -4,3 +4,5 @@ node_modules
 store/db.json
 dist
 yarn-error.log
+*.sqbpro
+*.db

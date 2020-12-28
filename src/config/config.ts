@@ -5,6 +5,8 @@ declare global {
       PREFIX: string;
       TOKEN: string;
       AUTH_SECRET: string;
+      ADMIN_USERNAME: string;
+      ADMIN_PASSWORD: string;
     }
   }
 }
