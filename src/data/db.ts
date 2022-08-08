@@ -1,6 +1,7 @@
 import path from 'path';
 import { ROOT } from '../paths';
 import { readJsonFile, writeJsonFile } from '../bot/lib/helpers';
+import config from '../config/config';
 
 export interface Vocab {
   phrase: string;
@@ -31,7 +32,7 @@ export interface DB {
   [key: string]: DBGuild;
 }
 
-const dbPath = path.join(ROOT, 'store', 'db.json');
+const dbPath = path.join(ROOT, config.dbJsonUrl);
 
 /**
  * Small wrapper around writing/reading to db json file
