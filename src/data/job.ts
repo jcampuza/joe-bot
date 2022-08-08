@@ -1,61 +1,73 @@
-export class Job {
-  isRunning = false;
+const createJob = (
+  name: string,
+  interval: number,
+  job: () => Promise<void>
+) => {
+  let isRunning = false;
+  let jobId: NodeJS.Timeout;
 
-  // Assigned just after creation
-  jobId!: NodeJS.Timeout;
+  const start = () => {
+    clearInterval(jobId);
+    jobId = setInterval(execute, interval);
+  };
 
-  constructor(
-    public name: string,
-    public interval: number,
-    public job: () => Promise<void>
-  ) {}
-
-  start() {
-    clearInterval(this.jobId);
-    this.jobId = setInterval(this.execute, this.interval);
-  }
-
-  stop() {
-    clearInterval(this.jobId);
-  }
+  const stop = () => {
+    clearInterval(jobId);
+  };
 
   // Prevent a job from being run multiple times at once
-  execute = async () => {
-    if (this.isRunning) {
+  const execute = async () => {
+    if (isRunning) {
       return true;
     }
 
-    this.isRunning = true;
-    await this.job();
-    this.isRunning = false;
+    isRunning = true;
+    await job();
+    isRunning = false;
   };
-}
 
-export class JobService {
-  jobs: Record<string, Job> = {};
+  return {
+    name,
+    start,
+    stop,
+    execute,
+  };
+};
 
-  // Creates a Job - Note: Jobs are not running by default
-  createJob(name: string, interval: number, jobCallback: () => Promise<void>) {
-    const j = new Job(name, interval, jobCallback);
+type JobType = ReturnType<typeof createJob>;
 
-    this.jobs[j.name] = j;
+export const createJobService = () => {
+  const jobs = new Map<string, JobType>();
 
+  const addJob = (
+    name: string,
+    interval: number,
+    jobCallback: () => Promise<void>
+  ) => {
+    const j = createJob(name, interval, jobCallback);
+    jobs.set(name, j);
     return j;
-  }
+  };
 
-  startJob(name: string) {
-    const j = this.jobs[name];
+  const startJob = (name: string) => {
+    const j = jobs.get(name);
 
     if (j) {
       j.start();
     }
-  }
+  };
 
-  stopJob(name: string) {
-    const j = this.jobs[name];
+  const stopJob = (name: string) => {
+    const j = jobs.get(name);
 
     if (j) {
       j.stop();
     }
-  }
-}
+  };
+
+  return {
+    addJob,
+    startJob,
+    stopJob,
+  };
+};

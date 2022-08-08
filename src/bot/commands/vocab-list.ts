@@ -1,6 +1,5 @@
 import { Buffer } from 'buffer';
 import { MessageAttachment } from 'discord.js';
-import { LanguageService } from '../../data/language';
 import { createCommand } from '../lib/command';
 
 const columns = ['Phrase', 'Definition', 'Hits'];
@@ -10,10 +9,7 @@ export default createCommand({
 
   description: 'Lists all vocab encountered thus far',
 
-  async execute(message, args, context) {
-    const guildId = context.guildId;
-    const languageService = context.get(LanguageService);
-
+  async execute(message, args, { guildId, appContext: { languageService } }) {
     const phrases = languageService.getPhrases(guildId);
 
     // Generate CSV

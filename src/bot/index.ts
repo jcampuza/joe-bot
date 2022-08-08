@@ -3,27 +3,22 @@ import { Command } from './lib/command';
 import Commands from './commands';
 import Listeners from './listeners';
 import config from '../config/config';
-import { ApplicationContext, CommandContext } from '../context';
-import { GuildService } from '../data/guild';
-import { ReminderService } from '../data/reminders';
-import { JobService } from '../data/job';
+import { AppContext, createCommandContext } from '../context';
+import { logger } from './lib/logger';
 
-const { prefix, token } = config;
+const { prefix, discordToken } = config;
 
-export async function startBot(appContext: ApplicationContext) {
-  // Create/Initialize available commands collection
-  const commands = new Disord.Collection<string, Command>();
-
-  for (const command of Object.values(Commands)) {
-    commands.set(command.name, command);
-  }
-
-  // Setup client and add to context
-  const client = new Disord.Client();
-  appContext.add(Disord.Client, client);
-
+export async function startBot(appContext: AppContext) {
   // Ensure all gilds DB's are up to date
-  appContext.get(GuildService).ensureAllGuilds();
+  appContext.guildService.ensureAllGuilds();
+
+  // Create/Initialize available commands collection
+  const commands = new Disord.Collection<string, Command>(
+    Object.values(Commands).map((command) => [command.name, command])
+  );
+
+  // Setup client
+  const client = new Disord.Client();
 
   client.once('ready', () => {
     console.log('Joe Bot successfully connected and ready');
@@ -37,24 +32,25 @@ export async function startBot(appContext: ApplicationContext) {
     // Parse arguments
     const guildId = message.guild?.id;
     const args = message.content.slice(prefix.length).trim().split(/ +/);
-    const command = args.shift()?.toLowerCase();
 
     // Ensure the guild is setup in the DB before handling a command or listener
-    const context = new CommandContext(commands, message, appContext);
-    context.get(GuildService).ensureGuild(guildId);
+    const context = createCommandContext(commands, message, appContext);
+    context.appContext.guildService.ensureGuild(guildId);
 
     const runCommand = () => {
       if (!message.content.startsWith(prefix)) {
         return false;
       }
 
-      if (!command || !commands.get(command)) {
+      const command = commands.get(args.shift()?.toLowerCase() ?? '');
+      if (!command) {
         return false;
       }
 
       // Run command
       try {
-        commands.get(command)!.execute(message, args, context);
+        logger.log('Running command', command.name);
+        command.execute(message, args, context);
       } catch (error) {
         console.error(error);
         message.reply(`There was an issue executing command: ${command}`);
@@ -65,15 +61,14 @@ export async function startBot(appContext: ApplicationContext) {
 
     const runListeners = () => {
       try {
-        const enabledListeners = Object.values(Listeners).filter((listener) =>
-          listener.enabled(message, context)
-        );
-
-        for (const listener of enabledListeners) {
-          listener.execute(message, context);
+        for (const listener of Object.values(Listeners)) {
+          if (listener.enabled(message, context)) {
+            logger.debug('Running listener', listener.name);
+            listener.execute(message, context);
+          }
         }
       } catch (error) {
-        console.error(error);
+        logger.error(error);
         message.reply('A listener failed to run on this message');
       }
     };
@@ -86,11 +81,10 @@ export async function startBot(appContext: ApplicationContext) {
     }
   });
 
-  client.login(token).then(() => {
-    const reminderService = appContext.get(ReminderService);
-    const jobService = appContext.get(JobService);
+  client.login(discordToken).then(() => {
+    const { reminderService, jobService } = appContext;
 
-    const reminderJob = jobService.createJob('reminders', 1000, () =>
+    const reminderJob = jobService.addJob('reminders', 1000, () =>
       reminderService.sendExpiredReminders(client)
     );
 

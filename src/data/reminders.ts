@@ -1,34 +1,30 @@
+import { Client } from 'discord.js';
 import { isFulfilled, reflect, uuid } from '../bot/lib/helpers';
 import { DBService, Reminder } from './db';
 import { GuildService } from './guild';
-import { Client } from 'discord.js';
-import { userInfo } from 'os';
-import { resolve } from 'path';
 
-export class ReminderService {
-  constructor(
-    private guildService: GuildService,
-    private dbService: DBService
-  ) {}
-
-  getReminders(guildId: string) {
-    const guild = this.guildService.getGuild(guildId);
+export const createReminderService = (
+  guildService: GuildService,
+  dbService: DBService
+) => {
+  const getReminders = (guildId: string) => {
+    const guild = guildService.getGuild(guildId);
 
     return guild.reminders;
-  }
+  };
 
-  getExpiredReminders(guildId: string) {
-    const guild = this.guildService.getGuild(guildId);
+  const getExpiredReminders = (guildId: string) => {
+    const guild = guildService.getGuild(guildId);
 
     const now = Date.now();
 
     return guild.reminders.filter((reminder) => {
       return new Date(reminder.time).getTime() < now;
     });
-  }
+  };
 
-  removeReminder(reminderId: string) {
-    const guilds = this.guildService.getGuilds();
+  const removeReminder = (reminderId: string) => {
+    const guilds = guildService.getGuilds();
 
     // Find Guild which contains this reminder
     const guild = guilds.find((guild) => {
@@ -44,11 +40,14 @@ export class ReminderService {
       (reminder) => reminder.id !== reminderId
     );
 
-    this.guildService.setGuild(guild);
-  }
+    guildService.setGuild(guild);
+  };
 
-  createReminder(guildId: string, reminder: Omit<Reminder, 'id' | 'guildId'>) {
-    const guild = this.guildService.getGuild(guildId);
+  const createReminder = (
+    guildId: string,
+    reminder: Omit<Reminder, 'id' | 'guildId'>
+  ) => {
+    const guild = guildService.getGuild(guildId);
 
     guild.reminders = [
       ...guild.reminders,
@@ -59,27 +58,27 @@ export class ReminderService {
       },
     ];
 
-    this.guildService.setGuild(guild);
-  }
+    guildService.setGuild(guild);
+  };
 
-  getAllReminders() {
-    const db = this.dbService.get();
+  const getAllReminders = () => {
+    const db = dbService.get();
 
     return Object.entries(db).reduce((acc, [id, db]) => {
       return [...acc, ...db.reminders];
     }, [] as Reminder[]);
-  }
+  };
 
-  getAllExpiredReminders() {
+  const getAllExpiredReminders = () => {
     const now = Date.now();
 
-    return this.getAllReminders().filter((reminder) => {
+    return getAllReminders().filter((reminder) => {
       return new Date(reminder.time).getTime() < now;
     });
-  }
+  };
 
-  async sendExpiredReminders(client: Client) {
-    const expiredReminders = this.getAllExpiredReminders();
+  const sendExpiredReminders = async (client: Client) => {
+    const expiredReminders = getAllExpiredReminders();
 
     const promises = expiredReminders.map((reminder) => {
       const promise = client.users
@@ -95,7 +94,18 @@ export class ReminderService {
     const successfulResponses = responses.filter(isFulfilled);
 
     for (const successfulResponse of successfulResponses) {
-      this.removeReminder(successfulResponse.result.id);
+      removeReminder(successfulResponse.result.id);
     }
-  }
-}
+  };
+
+  return {
+    getReminders,
+    getExpiredReminders,
+    getAllExpiredReminders,
+    sendExpiredReminders,
+    removeReminder,
+    createReminder,
+  };
+};
+
+export type ReminderService = ReturnType<typeof createReminderService>;

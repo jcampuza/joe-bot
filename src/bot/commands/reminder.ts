@@ -29,10 +29,7 @@ export default createCommand({
   description:
     'Adds a reminder, when the given time expires a message will be sent back to yourself.\nAll times in CST',
 
-  async execute(message, args, context) {
-    const guildId = context.guildId;
-    const reminderService = context.get(ReminderService);
-
+  async execute(message, args, { guildId, appContext: { reminderService } }) {
     if (!args.length) {
       return message.reply(
         'No reminder was present: \nformat: `(at|in) [time] (send) [message]`\nex: `in 2 minutes send Hello!`'

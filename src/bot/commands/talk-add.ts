@@ -6,9 +6,7 @@ export default createCommand({
 
   description: 'Add a talking point',
 
-  async execute(message, args, context) {
-    const talkService = context.get(TalkService);
-
+  async execute(message, args, { appContext: { talkService } }) {
     if (!args.length) {
       return message.reply('No talking point was set');
     }

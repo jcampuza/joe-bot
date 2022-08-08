@@ -21,42 +21,50 @@ const updateGuild = (guildId: string, guild: Partial<DBGuild>): DBGuild => {
   return copy as DBGuild;
 };
 
-export class GuildService {
-  constructor(private dbService: DBService) {}
-
-  ensureGuild(guildId?: string) {
+export const createGuildService = (dbService: DBService) => {
+  const ensureGuild = (guildId?: string) => {
     if (!guildId) {
       return;
     }
 
-    const data = this.dbService.get();
+    const data = dbService.get();
 
     data[guildId] = updateGuild(guildId, data[guildId] ?? {});
 
-    this.dbService.set(data);
-  }
+    dbService.set(data);
+  };
 
-  ensureAllGuilds() {
-    const data = this.dbService.get();
+  const ensureAllGuilds = () => {
+    const data = dbService.get();
 
     for (const guild of Object.values(data)) {
-      this.ensureGuild(guild.id);
+      ensureGuild(guild.id);
     }
-  }
+  };
 
-  getGuild(guildId: string) {
-    return this.dbService.get()[guildId];
-  }
+  const getGuild = (guildId: string) => {
+    return dbService.get()[guildId];
+  };
 
-  setGuild(guild: DBGuild) {
-    const db = this.dbService.get();
+  const setGuild = (guild: DBGuild) => {
+    const db = dbService.get();
 
     db[guild.id] = guild;
 
-    return this.dbService.set(db);
-  }
+    return dbService.set(db);
+  };
 
-  getGuilds() {
-    return Object.values(this.dbService.get());
-  }
-}
+  const getGuilds = () => {
+    return Object.values(dbService.get());
+  };
+
+  return {
+    ensureGuild,
+    ensureAllGuilds,
+    getGuild,
+    setGuild,
+    getGuilds,
+  };
+};
+
+export type GuildService = ReturnType<typeof createGuildService>;

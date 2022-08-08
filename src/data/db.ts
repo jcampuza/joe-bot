@@ -36,12 +36,16 @@ const dbPath = path.join(ROOT, 'store', 'db.json');
 /**
  * Small wrapper around writing/reading to db json file
  */
-export class DBService {
-  set(db: DB) {
-    return writeJsonFile(dbPath, db);
-  }
+export const createDbService = () => {
+  return {
+    set(db: DB) {
+      return writeJsonFile(dbPath, db);
+    },
 
-  get(): DB {
-    return readJsonFile(dbPath) as DB;
-  }
-}
+    get(): DB {
+      return readJsonFile(dbPath) as DB;
+    },
+  };
+};
+
+export type DBService = ReturnType<typeof createDbService>;

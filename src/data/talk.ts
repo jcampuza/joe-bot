@@ -1,24 +1,22 @@
 import { DBService } from './db';
 
-export class TalkService {
-  constructor(private dbService: DBService) {}
-
-  getTalkingPoints(guildId: string) {
-    const data = this.dbService.get();
+export const createTalkService = (dbService: DBService) => {
+  const getTalkingPoints = (guildId: string) => {
+    const data = dbService.get();
 
     return data[guildId].talkingPoints;
-  }
+  };
 
-  setTalkingPoint(guildId: string, text = '') {
-    const data = this.dbService.get();
+  const setTalkingPoint = (guildId: string, text = '') => {
+    const data = dbService.get();
 
     data[guildId].talkingPoints.push(text);
 
-    this.dbService.set(data);
-  }
+    dbService.set(data);
+  };
 
-  updateTalkingPoint(guildId: string, idx: number, text = '') {
-    const data = this.dbService.get();
+  const updateTalkingPoint = (guildId: string, idx: number, text = '') => {
+    const data = dbService.get();
 
     data[guildId].talkingPoints = data[guildId].talkingPoints.map((item, i) => {
       if (i === idx - 1) {
@@ -28,11 +26,11 @@ export class TalkService {
       return item;
     });
 
-    this.dbService.set(data);
-  }
+    dbService.set(data);
+  };
 
-  deleteTalkingPoints(guildId: string, indexes: number[]) {
-    const data = this.dbService.get();
+  const deleteTalkingPoints = (guildId: string, indexes: number[]) => {
+    const data = dbService.get();
 
     const originalLength = data[guildId].talkingPoints.length;
 
@@ -44,21 +42,21 @@ export class TalkService {
 
     data[guildId].talkingPoints = filteredTalkingPoints;
 
-    this.dbService.set(data);
+    dbService.set(data);
 
     return originalLength - filteredTalkingPoints.length;
-  }
+  };
 
-  clearTalkingPoints(guildId: string) {
-    const data = this.dbService.get();
+  const clearTalkingPoints = (guildId: string) => {
+    const data = dbService.get();
 
     data[guildId].talkingPoints = [];
 
-    this.dbService.set(data);
-  }
+    dbService.set(data);
+  };
 
-  formatTalkingPoints(guildId: string) {
-    const talkingPoints = this.getTalkingPoints(guildId);
+  const formatTalkingPoints = (guildId: string) => {
+    const talkingPoints = getTalkingPoints(guildId);
 
     if (!talkingPoints.length) {
       return 'No current talking points: Up to date 👍';
@@ -68,5 +66,16 @@ export class TalkService {
       'Current talking points:',
       ...talkingPoints.map((point, idx) => `${idx + 1}: ${point}`),
     ].join('\n');
-  }
-}
+  };
+
+  return {
+    getTalkingPoints,
+    setTalkingPoint,
+    updateTalkingPoint,
+    deleteTalkingPoints,
+    clearTalkingPoints,
+    formatTalkingPoints,
+  };
+};
+
+export type TalkService = ReturnType<typeof createTalkService>;

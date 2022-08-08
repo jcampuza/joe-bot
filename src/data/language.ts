@@ -1,26 +1,24 @@
 import { DBService, Vocab } from './db';
 import { GuildService } from './guild';
 
-export class LanguageService {
-  constructor(
-    private dbService: DBService,
-    private guildService: GuildService
-  ) {}
-
-  getEnabled(guildId: string) {
-    const guild = this.guildService.getGuild(guildId);
+export const createLanguageService = (
+  dbService: DBService,
+  guildService: GuildService
+) => {
+  const getEnabled = (guildId: string) => {
+    const guild = guildService.getGuild(guildId);
 
     return guild.language.enabled;
-  }
+  };
 
-  toggleLanguageService(guildId: string, value: boolean) {
-    const guild = this.guildService.getGuild(guildId);
+  const toggleLanguageService = (guildId: string, value: boolean) => {
+    const guild = guildService.getGuild(guildId);
     guild.language.enabled = value;
-    this.guildService.setGuild(guild);
-  }
+    guildService.setGuild(guild);
+  };
 
-  addVocab(guildId: string, phrase: string, definition: string) {
-    const guild = this.guildService.getGuild(guildId);
+  const addVocab = (guildId: string, phrase: string, definition: string) => {
+    const guild = guildService.getGuild(guildId);
 
     if (guild.language.vocab[phrase]) {
       guild.language.vocab[phrase] = {
@@ -36,23 +34,33 @@ export class LanguageService {
       };
     }
 
-    this.guildService.setGuild(guild);
-  }
+    guildService.setGuild(guild);
+  };
 
-  getPhrases(guildId: string) {
-    const guild = this.guildService.getGuild(guildId);
+  const getPhrases = (guildId: string) => {
+    const guild = guildService.getGuild(guildId);
 
     const phrases = Object.values(guild.language.vocab);
 
     return phrases;
-  }
+  };
 
-  updateHits(guildId: string, phrase: Vocab) {
-    const guild = this.guildService.getGuild(guildId);
+  const updateHits = (guildId: string, phrase: Vocab) => {
+    const guild = guildService.getGuild(guildId);
     const vocab = guild.language.vocab[phrase.phrase];
 
     guild.language.vocab[phrase.phrase] = { ...vocab, hits: vocab.hits + 1 };
 
-    this.guildService.setGuild(guild);
-  }
-}
+    guildService.setGuild(guild);
+  };
+
+  return {
+    getEnabled,
+    toggleLanguageService,
+    addVocab,
+    getPhrases,
+    updateHits,
+  };
+};
+
+export type LanguageService = ReturnType<typeof createLanguageService>;

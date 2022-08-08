@@ -6,9 +6,7 @@ export default createCommand({
 
   description: 'Delete a talking point by its ID',
 
-  async execute(message, args, context) {
-    const talkService = context.get(TalkService);
-
+  async execute(message, args, { appContext: { talkService } }) {
     const rawIdList = args[0];
 
     if (!rawIdList.length) {

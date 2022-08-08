@@ -21,17 +21,11 @@ export default createListener({
   name: 'vocab-phrase',
   description:
     'Listens for commands containing a vocab snippet and stores it for later use',
-  enabled(_, context) {
-    const languageService = context.get(LanguageService);
-    const guildId = context.guildId;
-
+  enabled(_, { appContext: { languageService }, guildId }) {
     return languageService.getEnabled(guildId);
   },
 
-  execute(message, context) {
-    const languageService = context.get(LanguageService);
-    const guildId = context.guildId;
-
+  execute(message, { appContext: { languageService }, guildId }) {
     const content = message.content;
 
     if (!shouldExecute(content)) {

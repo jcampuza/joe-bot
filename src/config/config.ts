@@ -3,7 +3,7 @@ declare global {
     export interface ProcessEnv {
       NODE_ENV: 'production' | 'development' | undefined;
       PREFIX: string;
-      TOKEN: string;
+      DISCORD_TOKEN: string;
       AUTH_SECRET: string;
       ADMIN_USERNAME: string;
       ADMIN_PASSWORD: string;
@@ -13,6 +13,6 @@ declare global {
 
 export default {
   prefix: process.env.PREFIX,
-  token: process.env.TOKEN,
+  discordToken: process.env.DISCORD_TOKEN,
   authSecret: process.env.AUTH_SECRET,
 };

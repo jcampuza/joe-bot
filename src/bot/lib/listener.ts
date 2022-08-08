@@ -4,7 +4,7 @@ import { CommandContext } from '../../context';
 export interface Listener {
   name: string;
   description: string;
-  enabled: (message: Discord.Message, context: CommandContext) => void;
+  enabled: (message: Discord.Message, context: CommandContext) => boolean;
   execute: (message: Discord.Message, context: CommandContext) => void;
 }
 

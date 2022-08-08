@@ -6,9 +6,7 @@ export default createCommand({
 
   description: 'Clear all talking point',
 
-  async execute(message, _, context) {
-    const talkService = context.get(TalkService);
-
+  async execute(message, _, { appContext: { talkService } }) {
     talkService.clearTalkingPoints(message.guild!.id);
 
     await message.reply('Talking points cleared');
