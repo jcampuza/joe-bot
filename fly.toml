@@ -1,0 +1,18 @@
+# fly.toml file generated for joe-bot on 2022-08-08T12:41:57-05:00
+
+app = "joe-bot"
+kill_signal = "SIGINT"
+kill_timeout = 5
+processes = []
+
+[env]
+  PORT = "8080"
+
+[mounts]
+  source = "joebot_data"
+  destination = "/data"
+
+[experimental]
+  allowed_public_ports = []
+  auto_rollback = true
+

@@ -1,5 +1,3 @@
-import path from 'path';
-import { ROOT } from '../paths';
 import { readJsonFile, writeJsonFile } from '../bot/lib/helpers';
 import config from '../config/config';
 
@@ -32,7 +30,12 @@ export interface DB {
   [key: string]: DBGuild;
 }
 
-const dbPath = path.join(ROOT, config.dbJsonUrl);
+export const ensureDb = () => {
+  const file = readJsonFile(config.dbJsonUrl);
+  if (file === null) {
+    writeJsonFile(config.dbJsonUrl, {});
+  }
+};
 
 /**
  * Small wrapper around writing/reading to db json file
@@ -40,11 +43,11 @@ const dbPath = path.join(ROOT, config.dbJsonUrl);
 export const createDbService = () => {
   return {
     set(db: DB) {
-      return writeJsonFile(dbPath, db);
+      return writeJsonFile(config.dbJsonUrl, db);
     },
 
     get(): DB {
-      return readJsonFile(dbPath) as DB;
+      return readJsonFile(config.dbJsonUrl) as DB;
     },
   };
 };
